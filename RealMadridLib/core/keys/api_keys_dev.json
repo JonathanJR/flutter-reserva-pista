@@ -1,0 +1,20 @@
+{
+  "INDIGITALL_APP_KEY": "xxxxx",
+  "INDIGITALL_SENDER_ID": "xxxxx",
+  "INDIGITALL_URL": "https://rmd.device-api.indigitall.com/v1",
+  "NARM_CLIENT_ID": "xxxxxx", 
+  "NARM_CLIENT_SECRET": "xxxxxx",
+  "NARM_API_SUBSCRIPTION_KEY": "xxxxxx",
+  "ADOBE_ID": "xxxxxx",
+  "ADOBE_NO_CONSENT_DATASET_ID": "xxxxxx",
+  "ONE_TRUST_IOS_ID": "xxxxxx",
+  "ONE_TRUST_ANDROID_ID": "xxxxxx",
+  "ONE_TRUST_CDN": "cdn.cookielaw.org",
+  "URL_ADOBE": "https://publish-p47754-e237356.adobeaemcloud.com/",
+  "NARM_BASE_URL": "https://api-narm-test.realmadrid.com/",
+  "ADOBE_ANALYTIC_ID": "xxxxxx",
+  "PRETTY_DIO_LOGGER": true,
+  "CURL_LOGGER_DIO_INTERCEPTOR": true,
+  "DEV_MODE_USER_EMAIL": "dev@realmadrid.com",
+  "DEV_MODE_USER_PASSWORD": "dev"
+}
