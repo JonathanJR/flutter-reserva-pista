@@ -138,85 +138,299 @@ class ProfileView extends ConsumerWidget {
                   ),
                 ] else ...[
                   // Usuario autenticado - Mostrar información del perfil
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(32),
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGreen,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Icono de usuario autenticado
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade600,
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 48,
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Tarjeta principal del perfil
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(32),
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightPurple,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Saludo personalizado
-                        Text(
-                          user.displayName ?? 'Usuario',
-                          style: const TextStyle(
-                            fontSize: 28,
+                        child: Column(
+                          children: [
+                            // Avatar con iniciales
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _getInitials(user.fullName),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 24),
+                            
+                            // Nombre del usuario
+                            Text(
+                              user.fullName.isNotEmpty ? user.fullName : user.displayName ?? 'Usuario',
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2D1B69), // Morado oscuro
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            
+                            const SizedBox(height: 8),
+                            
+                            // Email del usuario
+                            Text(
+                              user.email,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF666666),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            
+                            const SizedBox(height: 32),
+                            
+                            // Botón Editar perfil
+                            SizedBox(
+                              width: 200,
+                              height: 48,
+                              child: OutlinedButton.icon(
+                                onPressed: () {
+                                  // TODO: Implementar editar perfil
+                                  debugPrint('Editar perfil pressed');
+                                },
+                                icon: const Icon(
+                                  Icons.edit_outlined,
+                                  size: 20,
+                                  color: Color(0xFF2D1B69),
+                                ),
+                                label: const Text(
+                                  'Editar perfil',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF2D1B69),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(color: Color(0xFF2D1B69), width: 2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // Título Estadísticas
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'Estadísticas',
+                          style: TextStyle(
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B5E20), // Verde oscuro
+                            color: AppColors.onBackground,
                           ),
                         ),
-                        
-                        const SizedBox(height: 8),
-                        
-                        // Email del usuario
-                        Text(
-                          user.email,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF666666),
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 32),
-                        
-                        // Botón de Cerrar Sesión
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final authRepository = ref.read(authRepositoryProvider);
-                              await authRepository.signOut();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade600,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(28),
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Tarjetas de estadísticas
+                      Row(
+                        children: [
+                          // Total reservas
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 16, right: 8),
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.green.shade600,
+                                    size: 32,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    '${user.reservationCount}',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green.shade600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Total reservas',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
-                            child: const Text(
-                              'Cerrar Sesión',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                          ),
+                          
+                          // Reservas activas
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 8, right: 16),
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.check,
+                                    color: Colors.green.shade600,
+                                    size: 32,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green.shade600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Activas',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // Miembro desde
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Miembro desde',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  _formatRegistrationDate(user.registrationDate),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.onBackground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // Botón de Cerrar Sesión
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        height: 56,
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            final authRepository = ref.read(authRepositoryProvider);
+                            await authRepository.signOut();
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.red,
+                          ),
+                          label: const Text(
+                            'Cerrar sesión',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red.shade50,
+                            foregroundColor: Colors.red,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
                 
@@ -228,5 +442,31 @@ class ProfileView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Obtener iniciales del nombre completo
+  String _getInitials(String fullName) {
+    if (fullName.isEmpty) return 'U';
+    
+    final names = fullName.trim().split(' ');
+    if (names.length == 1) {
+      return names[0].substring(0, 1).toUpperCase();
+    } else {
+      return '${names[0].substring(0, 1)}${names[1].substring(0, 1)}'.toUpperCase();
+    }
+  }
+
+  /// Formatear fecha de registro
+  String _formatRegistrationDate(DateTime date) {
+    final months = [
+      '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    
+    final day = date.day;
+    final month = months[date.month];
+    final year = date.year;
+    
+    return '$day de $month del $year';
   }
 }
