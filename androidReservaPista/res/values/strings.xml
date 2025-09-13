@@ -1,0 +1,203 @@
+<resources>
+    <string name="app_name">Reserva Pista Gilena</string>
+    
+    <!-- Pantallas de navegación -->
+    <string name="screen_login">Iniciar Sesión</string>
+    <string name="screen_register">Crear Cuenta</string>
+    <string name="screen_home">Inicio</string>
+    <string name="screen_calendar">Calendario - %1$s</string>
+    <string name="screen_confirmation">Confirmar Reserva</string>
+    <string name="screen_options">Opciones de %1$s</string>
+    <string name="screen_profile">Mi Perfil</string>
+    <string name="screen_my_reservations">Mis Reservas</string>
+    
+    <!-- Componentes Comunes -->
+    <string name="common_back">Volver</string>
+    <string name="common_profile">Perfil</string>
+    <string name="common_loading">Cargando...</string>
+    <string name="common_error_title">Error</string>
+    <string name="common_accept">Aceptar</string>
+    <string name="common_success_title">Éxito</string>
+    <string name="common_available">Disponible</string>
+    <string name="common_occupied">Ocupado</string>
+    <string name="common_not_available">No disponible</string>
+    
+    <!-- Pantalla de Login -->
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="login_welcome_emoji">🏟️</string>
+    <string name="login_welcome_title">Bienvenido de vuelta</string>
+    <string name="login_welcome_subtitle">Inicia sesión para gestionar tus reservas</string>
+    <string name="login_email">Correo electrónico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="login_or">o</string>
+    <string name="login_create_account">Crear nueva cuenta</string>
+    <string name="login_why_account_title">ℹ️ ¿Por qué necesito una cuenta?</string>
+    <string name="login_why_account_content">• Gestiona tus reservas fácilmente\n• Historial de actividades\n• Cancelaciones rápidas\n• Notificaciones importantes</string>
+    <string name="login_loading">Iniciando sesión…</string>
+    <string name="login_error_title">Error de inicio de sesión</string>
+    
+    <!-- Pantalla de Registro -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_welcome_emoji">🎾</string>
+    <string name="register_welcome_title">¡Únete a nosotros!</string>
+    <string name="register_welcome_subtitle">Crea tu cuenta para comenzar a reservar pistas</string>
+    <string name="register_full_name">Nombre completo</string>
+    <string name="register_email">Correo electrónico</string>
+    <string name="register_password">Contraseña</string>
+    <string name="register_confirm_password">Confirmar contraseña</string>
+    <string name="register_accept_terms">Acepto los términos y condiciones</string>
+    <string name="register_accept_privacy">y la política de privacidad</string>
+    <string name="register_button">Crear Cuenta</string>
+    <string name="register_already_account">¿Ya tienes cuenta?</string>
+    <string name="register_login">Inicia sesión</string>
+    <string name="register_loading">Creando tu cuenta…</string>
+    <string name="register_success_title">¡Cuenta creada!</string>
+    <string name="register_error_title">Error de registro</string>
+    
+    <!-- Pantalla de Home -->
+    <string name="home_title">Polideportivo Gilena</string>
+    <string name="home_welcome">¡Bienvenido!</string>
+    <string name="home_select_court_type">Selecciona el tipo de pista que deseas reservar:</string>
+    <string name="home_info_title">ℹ️ Información importante</string>
+    <string name="home_info_content">• Todas las reservas duran 1h 30min\n• Máximo 1 reserva por día\n• No hay reservas los fines de semana\n• Reserva con hasta 7 días de antelación</string>
+    <string name="home_my_reservations">Mis Reservas</string>
+    <string name="home_loading">Cargando pistas disponibles…</string>
+    
+    <!-- Pantalla de Options -->
+    <string name="options_select_court">Selecciona la pista específica:</string>
+    <string name="options_description">Cada opción tiene características diferentes. Elige la que mejor se adapte a tus necesidades.</string>
+    <string name="options_login_card_title">💡 ¿Quieres hacer una reserva?</string>
+    <string name="options_login_card_content">Puedes ver la disponibilidad sin registrarte, pero necesitas una cuenta para realizar reservas.</string>
+    <string name="options_login_button">Iniciar Sesión / Registrarse</string>
+    <string name="options_view_availability">Ver Disponibilidad</string>
+    <string name="options_book">Reservar</string>
+    <string name="options_login">Iniciar Sesión</string>
+    <string name="options_unavailable">⚠️ Pista temporalmente no disponible</string>
+    <string name="options_loading">Cargando opciones de pistas…</string>
+    
+    <!-- Tipos de deporte -->
+    <string name="sport_tennis">Tenis</string>
+    <string name="sport_padel">Pádel</string>
+    <string name="sport_football">Fútbol Sala</string>
+    <string name="sport_generic">Deporte</string>
+    
+    <!-- Pantalla de Calendario -->
+    <string name="calendar_default_court">Pista</string>
+    <string name="calendar_selected_reservation">Reserva seleccionada:</string>
+    <string name="calendar_button_continue">Continuar</string>
+    <string name="calendar_select_date_time">Selecciona fecha y horario:</string>
+    <string name="calendar_select_date_time_subtitle">Escoge un día disponible y luego selecciona el horario que prefieras.</string>
+    <string name="calendar_available_dates">📅 Fechas disponibles</string>
+    <string name="calendar_available_times">🕐 Horarios disponibles</string>
+    <string name="calendar_selected_date">Fecha seleccionada: %1$s</string>
+    <string name="calendar_no_slots_available">No hay horarios disponibles</string>
+    <string name="calendar_no_slots_message">Para este día no hay horarios disponibles. Por favor, selecciona otra fecha.</string>
+    <string name="calendar_morning">Mañana</string>
+    <string name="calendar_afternoon">Tarde</string>
+    <string name="calendar_no_morning_slots">No hay horarios disponibles en la mañana</string>
+    <string name="calendar_no_afternoon_slots">No hay horarios disponibles en la tarde</string>
+    <string name="calendar_select_date_message">Selecciona una fecha</string>
+    <string name="calendar_select_date_subtitle">Elige una fecha disponible para ver los horarios</string>
+    <string name="calendar_loading">Cargando horarios disponibles…</string>
+    
+    <!-- Pantalla de Perfil -->
+    <string name="profile_loading">Cargando datos…</string>
+    <string name="profile_logout_loading">Cerrando sesión…</string>
+    <string name="profile_logout_title">Cerrar sesión</string>
+    <string name="profile_logout_message">¿Estás seguro de que quieres cerrar sesión?</string>
+    <string name="profile_logout_confirm">Cerrar sesión</string>
+    <string name="profile_logout_cancel">Cancelar</string>
+    <string name="profile_edit_title">Editar perfil</string>
+    <string name="profile_edit_name">Nombre completo</string>
+    <string name="profile_edit_save">Guardar</string>
+    <string name="profile_edit_cancel">Cancelar</string>
+    <string name="profile_edit_loading">Actualizando perfil…</string>
+    <string name="profile_edit_success">Perfil actualizado correctamente</string>
+    <string name="profile_edit_error">Error al actualizar el perfil</string>
+    <string name="profile_edit_no_user">No hay usuario autenticado</string>
+    <string name="profile_edit_name_required">El nombre es requerido</string>
+    <string name="profile_edit_name_short">El nombre debe tener al menos 2 caracteres</string>
+    <string name="profile_guest_title">Inicia sesión</string>
+    <string name="profile_guest_subtitle">Accede a tu cuenta para gestionar tus reservas y ver tu historial de actividades</string>
+    <string name="profile_guest_button">Iniciar Sesión</string>
+    <string name="profile_stats_title">Estadísticas</string>
+    <string name="profile_stats_total">Total reservas</string>
+    <string name="profile_stats_active">Activas</string>
+    <string name="profile_member_since">Miembro desde</string>
+    
+    <!-- Pantalla de Mis Reservas -->
+    <string name="my_reservations_loading">Cargando reservas…</string>
+    <string name="my_reservations_cancel_title">Cancelar reserva</string>
+    <string name="my_reservations_cancel_message">¿Confirmas la cancelación de esta reserva?</string>
+    <string name="my_reservations_cancel_note">Recuerda que solo puedes cancelar reservas hasta 2 horas antes del horario programado.</string>
+    <string name="my_reservations_cancel_button">Cancelar reserva</string>
+    <string name="my_reservations_keep_button">Mantener</string>
+    <string name="my_reservations_success_title">Reserva cancelada</string>
+    <string name="my_reservations_empty_title">Sin reservas aún</string>
+    <string name="my_reservations_empty_subtitle">Ve al inicio para hacer tu primera reserva</string>
+    <string name="my_reservations_empty_active">No tienes reservas activas</string>
+    <string name="my_reservations_empty_completed">No tienes reservas completadas</string>
+    <string name="my_reservations_empty_cancelled">No tienes reservas canceladas</string>
+    <string name="my_reservations_empty_all">No hay reservas</string>
+    <string name="my_reservations_filter_title">Filtrar reservas</string>
+    <string name="my_reservations_filter_all">Todas (%1$d)</string>
+    <string name="my_reservations_filter_active">Activas (%1$d)</string>
+    <string name="my_reservations_filter_completed">Completadas (%1$d)</string>
+    <string name="my_reservations_filter_cancelled">Canceladas (%1$d)</string>
+    <string name="my_reservations_status_active">Activa</string>
+    <string name="my_reservations_status_completed">Completada</string>
+    <string name="my_reservations_status_cancelled">Cancelada</string>
+    <string name="my_reservations_cancel_button_small">Cancelar</string>
+    <string name="my_reservations_cancelled_message">Esta reserva ha sido cancelada</string>
+    <string name="my_reservations_completed_message">Esta reserva ha sido completada</string>
+    
+    <!-- Abreviaturas de días de semana -->
+    <string name="day_monday">Lun</string>
+    <string name="day_tuesday">Mar</string>
+    <string name="day_wednesday">Mié</string>
+    <string name="day_thursday">Jue</string>
+    <string name="day_friday">Vie</string>
+    
+    <!-- Abreviaturas de meses -->
+    <string name="month_jan">Ene</string>
+    <string name="month_feb">Feb</string>
+    <string name="month_mar">Mar</string>
+    <string name="month_apr">Abr</string>
+    <string name="month_may">May</string>
+    <string name="month_jun">Jun</string>
+    <string name="month_jul">Jul</string>
+    <string name="month_aug">Ago</string>
+    <string name="month_sep">Sep</string>
+    <string name="month_oct">Oct</string>
+    <string name="month_nov">Nov</string>
+    <string name="month_dec">Dic</string>
+    
+    <!-- Pantalla de Confirmación -->
+    <string name="confirmation_title">Confirmar Reserva</string>
+    <string name="confirmation_ready">¡Lista para confirmar!</string>
+    <string name="confirmation_review">Revisa los detalles de tu reserva antes de confirmar</string>
+    <string name="confirmation_details">Detalles de la reserva:</string>
+    <string name="confirmation_court">Pista seleccionada</string>
+    <string name="confirmation_location">Polideportivo Municipal de Gilena</string>
+    <string name="confirmation_date_time">Fecha y horario</string>
+    <string name="confirmation_duration">Duración: %1$s</string>
+    <string name="confirmation_price_title">Precio total</string>
+    <string name="confirmation_price_subtitle">Reserva municipal</string>
+    <string name="confirmation_free">Gratuito</string>
+    <string name="confirmation_conditions_title">📋 Condiciones importantes:</string>
+    <string name="confirmation_condition_1">La reserva tiene una duración fija de 1h 30min</string>
+    <string name="confirmation_condition_2">Puedes cancelar la reserva hasta 2 horas antes del horario programado</string>
+    <string name="confirmation_condition_3">Máximo 1 reserva activa por día</string>
+    <string name="confirmation_condition_4">Debes llegar puntual al horario reservado</string>
+    <string name="confirmation_condition_5">Trae tu propio equipamiento deportivo</string>
+    <string name="confirmation_bullet">• </string>
+    <string name="confirmation_cancel">Cancelar</string>
+    <string name="confirmation_confirm">Confirmar Reserva</string>
+    <string name="confirmation_loading">Confirmando tu reserva…</string>
+    <string name="confirmation_success_title">¡Reserva confirmada!</string>
+    
+    <!-- Contraseñas -->
+    <string name="password_show">Mostrar contraseña</string>
+    <string name="password_hide">Ocultar contraseña</string>
+</resources>
