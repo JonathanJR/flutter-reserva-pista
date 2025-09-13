@@ -9,6 +9,7 @@ import '../../domain/repositories/court_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/get_sport_types_stream_usecase.dart';
 import '../../domain/usecases/auth/sign_in_with_email_password_usecase.dart';
+import '../../domain/usecases/auth/sign_up_with_email_password_usecase.dart';
 
 /// Provider para FirebaseFirestore
 final firestoreProvider = Provider<FirebaseFirestore>((ref) {
@@ -29,7 +30,8 @@ final courtRemoteDataSourceProvider = Provider<CourtRemoteDataSource>((ref) {
 /// Provider para AuthRemoteDataSource
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   final firebaseAuth = ref.read(firebaseAuthProvider);
-  return AuthRemoteDataSource(firebaseAuth);
+  final firestore = ref.read(firestoreProvider);
+  return AuthRemoteDataSource(firebaseAuth, firestore);
 });
 
 /// Provider para CourtRepository
@@ -54,6 +56,12 @@ final getSportTypesStreamUseCaseProvider = Provider<GetSportTypesStreamUseCase>(
 final signInWithEmailPasswordUseCaseProvider = Provider<SignInWithEmailPasswordUseCase>((ref) {
   final repository = ref.read(authRepositoryProvider);
   return SignInWithEmailPasswordUseCase(repository);
+});
+
+/// Provider para SignUpWithEmailPasswordUseCase
+final signUpWithEmailPasswordUseCaseProvider = Provider<SignUpWithEmailPasswordUseCase>((ref) {
+  final repository = ref.read(authRepositoryProvider);
+  return SignUpWithEmailPasswordUseCase(repository);
 });
 
 /// Provider para obtener los tipos de deporte con disponibilidad en tiempo real

@@ -20,6 +20,19 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<User> signUpWithEmailAndPassword({
+    required String fullName,
+    required String email,
+    required String password,
+  }) {
+    return _remoteDataSource.signUpWithEmailAndPassword(
+      fullName: fullName,
+      email: email,
+      password: password,
+    );
+  }
+
+  @override
   Future<User?> getCurrentUser() {
     return _remoteDataSource.getCurrentUser();
   }

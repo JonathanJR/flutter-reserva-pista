@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/auth/views/login_view.dart';
+import '../../presentation/auth/views/register_view.dart';
 import '../../presentation/home/views/home_view.dart';
 import '../../presentation/profile/views/profile_view.dart';
 import 'app_routes.dart';
@@ -17,6 +18,16 @@ class AppRouter {
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
           child: const LoginView(),
+        ),
+      ),
+      
+      // Ruta de Registro
+      GoRoute(
+        path: AppRoutes.register.path,
+        name: AppRoutes.register.name,
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const RegisterView(),
         ),
       ),
       
@@ -41,8 +52,6 @@ class AppRouter {
       ),
       
       // TODO: Agregar más rutas según sea necesario
-      // - Login
-      // - Register
       // - Court Selection
       // - Calendar
       // - Reservations

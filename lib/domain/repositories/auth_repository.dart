@@ -8,6 +8,13 @@ abstract interface class AuthRepository {
     required String password,
   });
 
+  /// Registrar usuario con email y contraseña
+  Future<User> signUpWithEmailAndPassword({
+    required String fullName,
+    required String email,
+    required String password,
+  });
+
   /// Obtener el usuario actual
   Future<User?> getCurrentUser();
 

@@ -4,22 +4,22 @@ import 'package:go_router/go_router.dart';
 import '../../../core/navigation/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/providers/firebase_providers.dart';
-import '../state/login_notifier.dart';
+import '../state/register_notifier.dart';
 
-/// Vista de Login
-class LoginView extends ConsumerWidget {
-  const LoginView({super.key});
+/// Vista de Registro
+class RegisterView extends ConsumerWidget {
+  const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loginState = ref.watch(loginNotifierProvider);
-    final loginNotifier = ref.read(loginNotifierProvider.notifier);
+    final registerState = ref.watch(registerNotifierProvider);
+    final registerNotifier = ref.read(registerNotifierProvider.notifier);
 
     // Escuchar cambios en el estado de autenticación
     ref.listen(authStateProvider, (previous, next) {
       next.whenData((user) {
         if (user != null) {
-          // Usuario autenticado, navegar a home
+          // Usuario registrado y autenticado, navegar a home
           context.go(AppRoutes.home.path);
         }
       });
@@ -28,7 +28,7 @@ class LoginView extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Iniciar Sesión'),
+        title: const Text('Crear Cuenta'),
         backgroundColor: AppColors.primary,
       ),
       body: SingleChildScrollView(
@@ -48,7 +48,7 @@ class LoginView extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(32, 40, 32, 40),
               child: Column(
                 children: [
-                  // Ícono/Logo (usando un ícono similar al de la imagen)
+                  // Ícono de raqueta de tennis
                   Container(
                     width: 80,
                     height: 80,
@@ -64,7 +64,7 @@ class LoginView extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.sports_soccer,
+                      Icons.sports_tennis,
                       size: 40,
                       color: AppColors.primary,
                     ),
@@ -74,7 +74,7 @@ class LoginView extends ConsumerWidget {
                   
                   // Título principal
                   const Text(
-                    'Bienvenido de vuelta',
+                    '¡Únete a nosotros!',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class LoginView extends ConsumerWidget {
                   
                   // Descripción
                   const Text(
-                    'Inicia sesión para gestionar tus reservas',
+                    'Crea tu cuenta para comenzar a reservar pistas',
                     style: TextStyle(
                       fontSize: 16,
                       color: Color(0xFF666666),
@@ -106,9 +106,38 @@ class LoginView extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 24),
                   
+                  // Campo de Nombre completo
+                  TextFormField(
+                    onChanged: registerNotifier.updateFullName,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(
+                      labelText: 'Nombre completo',
+                      hintText: 'Nombre completo',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppColors.primary),
+                      ),
+                      errorText: registerState.fullName.isNotEmpty && !registerState.isFullNameValid
+                          ? 'El nombre debe tener al menos 2 caracteres'
+                          : null,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
                   // Campo de Email
                   TextFormField(
-                    onChanged: loginNotifier.updateEmail,
+                    onChanged: registerNotifier.updateEmail,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: 'Correo electrónico',
@@ -127,7 +156,7 @@ class LoginView extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(color: AppColors.primary),
                       ),
-                      errorText: loginState.email.isNotEmpty && !loginState.isEmailValid
+                      errorText: registerState.email.isNotEmpty && !registerState.isEmailValid
                           ? 'Email inválido'
                           : null,
                     ),
@@ -137,7 +166,7 @@ class LoginView extends ConsumerWidget {
                   
                   // Campo de Contraseña
                   TextFormField(
-                    onChanged: loginNotifier.updatePassword,
+                    onChanged: registerNotifier.updatePassword,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
@@ -157,16 +186,84 @@ class LoginView extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(color: AppColors.primary),
                       ),
-                      errorText: loginState.password.isNotEmpty && !loginState.isPasswordValid
+                      errorText: registerState.password.isNotEmpty && !registerState.isPasswordValid
                           ? 'La contraseña debe tener al menos 6 caracteres'
                           : null,
                     ),
                   ),
                   
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 16),
+                  
+                  // Campo de Confirmar contraseña
+                  TextFormField(
+                    onChanged: registerNotifier.updateConfirmPassword,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Confirmar contraseña',
+                      hintText: 'Confirmar contraseña',
+                      filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: const Icon(Icons.visibility_off, color: Colors.grey),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppColors.primary),
+                      ),
+                      errorText: registerState.confirmPassword.isNotEmpty && !registerState.isConfirmPasswordValid
+                          ? 'Las contraseñas no coinciden'
+                          : null,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Checkbox de términos y condiciones
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Checkbox(
+                        value: registerState.acceptTerms,
+                        onChanged: (value) => registerNotifier.updateAcceptTerms(value ?? false),
+                        activeColor: AppColors.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Acepto los términos y condiciones',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF2D1B69),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'y la política de privacidad',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 32),
                   
                   // Mostrar error si existe
-                  if (loginState.errorMessage != null) ...[
+                  if (registerState.errorMessage != null) ...[
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -184,7 +281,7 @@ class LoginView extends ConsumerWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              loginState.errorMessage!,
+                              registerState.errorMessage!,
                               style: TextStyle(
                                 color: Colors.red.shade700,
                                 fontSize: 14,
@@ -197,16 +294,16 @@ class LoginView extends ConsumerWidget {
                     const SizedBox(height: 16),
                   ],
                   
-                  // Botón de Iniciar Sesión
+                  // Botón de Crear Cuenta
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: loginState.isFormValid ? loginNotifier.signIn : null,
+                      onPressed: registerState.isFormValid ? registerNotifier.signUp : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: loginState.isFormValid 
+                        backgroundColor: registerState.isFormValid 
                             ? AppColors.primary 
                             : Colors.grey.shade300,
-                        foregroundColor: loginState.isFormValid 
+                        foregroundColor: registerState.isFormValid 
                             ? AppColors.onPrimary 
                             : Colors.grey.shade600,
                         elevation: 0,
@@ -214,7 +311,7 @@ class LoginView extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(28),
                         ),
                       ),
-                      child: loginState.isLoading
+                      child: registerState.isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
@@ -224,7 +321,7 @@ class LoginView extends ConsumerWidget {
                               ),
                             )
                           : const Text(
-                              'Iniciar Sesión',
+                              'Crear Cuenta',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -233,119 +330,31 @@ class LoginView extends ConsumerWidget {
                     ),
                   ),
                   
-                  const SizedBox(height: 32),
-                  
-                  // Separador
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'O',
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Botón Crear nueva cuenta
-                  SizedBox(
-                    height: 56,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        context.push(AppRoutes.register.path);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.primary, width: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                      ),
-                      child: const Text(
-                        'Crear nueva cuenta',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  
                   const SizedBox(height: 40),
                   
-                  // Sección informativa
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightPurple.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.blue.shade600,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              '¿Por qué necesito una cuenta?',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D1B69),
-                              ),
-                            ),
-                          ],
+                  // Link para ir a login
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '¿Ya tienes cuenta?  ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
                         ),
-                        
-                        const SizedBox(height: 16),
-                        
-                        const Text(
-                          '• Gestiona tus reservas fácilmente',
+                      ),
+                      GestureDetector(
+                        onTap: () => context.go(AppRoutes.login.path),
+                        child: const Text(
+                          'Inicia sesión',
                           style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                            height: 1.5,
+                            fontSize: 16,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const Text(
-                          '• Historial de actividades',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                            height: 1.5,
-                          ),
-                        ),
-                        const Text(
-                          '• Cancelaciones rápidas',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                            height: 1.5,
-                          ),
-                        ),
-                        const Text(
-                          '• Notificaciones importantes',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                            height: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   
                   const SizedBox(height: 40),
