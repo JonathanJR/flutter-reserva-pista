@@ -8,6 +8,7 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/court_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/get_sport_types_stream_usecase.dart';
+import '../../domain/usecases/get_courts_by_sport_type_usecase.dart';
 import '../../domain/usecases/auth/sign_in_with_email_password_usecase.dart';
 import '../../domain/usecases/auth/sign_up_with_email_password_usecase.dart';
 
@@ -52,6 +53,12 @@ final getSportTypesStreamUseCaseProvider = Provider<GetSportTypesStreamUseCase>(
   return GetSportTypesStreamUseCase(repository);
 });
 
+/// Provider para GetCourtsBySportTypeUseCase
+final getCourtsBySportTypeUseCaseProvider = Provider<GetCourtsBySportTypeUseCase>((ref) {
+  final repository = ref.read(courtRepositoryProvider);
+  return GetCourtsBySportTypeUseCase(repository);
+});
+
 /// Provider para SignInWithEmailPasswordUseCase
 final signInWithEmailPasswordUseCaseProvider = Provider<SignInWithEmailPasswordUseCase>((ref) {
   final repository = ref.read(authRepositoryProvider);
@@ -74,4 +81,10 @@ final sportTypesProvider = StreamProvider((ref) {
 final authStateProvider = StreamProvider((ref) {
   final repository = ref.read(authRepositoryProvider);
   return repository.authStateChanges;
+});
+
+/// Provider para obtener pistas por sport type
+final courtsBySportTypeProvider = StreamProvider.family<List<dynamic>, String>((ref, sportType) {
+  final useCase = ref.read(getCourtsBySportTypeUseCaseProvider);
+  return useCase.execute(sportType);
 });

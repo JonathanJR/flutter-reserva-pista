@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/auth/views/login_view.dart';
 import '../../presentation/auth/views/register_view.dart';
+import '../../presentation/courts/views/court_list_view.dart';
 import '../../presentation/home/views/home_view.dart';
 import '../../presentation/profile/views/profile_view.dart';
 import 'app_routes.dart';
@@ -49,6 +50,19 @@ class AppRouter {
           key: state.pageKey,
           child: const ProfileView(),
         ),
+      ),
+
+      // Ruta de Lista de Pistas
+      GoRoute(
+        path: '${AppRoutes.courtList.path}/:sportTypeId',
+        name: AppRoutes.courtList.name,
+        pageBuilder: (context, state) {
+          final sportTypeId = state.pathParameters['sportTypeId']!;
+          return MaterialPage(
+            key: state.pageKey,
+            child: CourtListView(sportTypeId: sportTypeId),
+          );
+        },
       ),
       
       // TODO: Agregar más rutas según sea necesario

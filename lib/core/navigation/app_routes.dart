@@ -3,7 +3,8 @@ enum AppRoutes {
   home,
   profile,
   login,
-  register;
+  register,
+  courtList;
 
   String get path => '/$name';
   String get name => toString().split('.').last;

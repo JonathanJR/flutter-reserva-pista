@@ -212,8 +212,8 @@ class HomeView extends ConsumerWidget {
                     isAvailable: sportType.isAvailable,
                     onTap: () {
                       if (sportType.isAvailable) {
-                        // TODO: Navegar a selección de pistas específicas
-                        debugPrint('Tapped on ${sportType.name} (${sportType.id})');
+                        // Navegar a selección de pistas específicas
+                        context.push('${AppRoutes.courtList.path}/${sportType.id}');
                       } else {
                         // Mostrar mensaje de no disponible
                         ScaffoldMessenger.of(context).showSnackBar(
