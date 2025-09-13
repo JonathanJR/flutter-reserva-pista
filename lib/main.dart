@@ -1,9 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_colors.dart';
 import 'core/navigation/app_router.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const ReservaPistaApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Inicializar Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  runApp(
+    // Envolver con ProviderScope para Riverpod
+    const ProviderScope(
+      child: ReservaPistaApp(),
+    ),
+  );
 }
 
 class ReservaPistaApp extends StatelessWidget {

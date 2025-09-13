@@ -1,83 +1,62 @@
 import 'package:equatable/equatable.dart';
+import '../../../domain/models/sport_type.dart';
 
 /// Estado de la pantalla Home
 class HomeState extends Equatable {
   final bool isLoading;
-  final List<SportInfo> sports;
+  final List<SportTypeInfo> sports;
+  final String? errorMessage;
 
   const HomeState({
     required this.isLoading,
     required this.sports,
+    this.errorMessage,
   });
 
   factory HomeState.initial() {
     return const HomeState(
+      isLoading: true,
+      sports: [],
+      errorMessage: null,
+    );
+  }
+
+  factory HomeState.loading() {
+    return const HomeState(
+      isLoading: true,
+      sports: [],
+      errorMessage: null,
+    );
+  }
+
+  factory HomeState.success(List<SportTypeInfo> sports) {
+    return HomeState(
       isLoading: false,
-      sports: [
-        SportInfo(
-          id: 'tennis',
-          name: 'Tenis',
-          imagePath: 'assets/images/img_tennis.png',
-          isAvailable: true,
-        ),
-        SportInfo(
-          id: 'padel',
-          name: 'Pádel',
-          imagePath: 'assets/images/img_padel.png',
-          isAvailable: true,
-        ),
-        SportInfo(
-          id: 'football',
-          name: 'Fútbol Sala',
-          imagePath: 'assets/images/img_football.png',
-          isAvailable: true,
-        ),
-      ],
+      sports: sports,
+      errorMessage: null,
+    );
+  }
+
+  factory HomeState.error(String message) {
+    return HomeState(
+      isLoading: false,
+      sports: [],
+      errorMessage: message,
     );
   }
 
   HomeState copyWith({
     bool? isLoading,
-    List<SportInfo>? sports,
+    List<SportTypeInfo>? sports,
+    String? errorMessage,
   }) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,
       sports: sports ?? this.sports,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, sports];
-}
-
-/// Información de un deporte para mostrar en la Home
-class SportInfo extends Equatable {
-  final String id;
-  final String name;
-  final String imagePath;
-  final bool isAvailable;
-
-  const SportInfo({
-    required this.id,
-    required this.name,
-    required this.imagePath,
-    this.isAvailable = true,
-  });
-
-  SportInfo copyWith({
-    String? id,
-    String? name,
-    String? imagePath,
-    bool? isAvailable,
-  }) {
-    return SportInfo(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      imagePath: imagePath ?? this.imagePath,
-      isAvailable: isAvailable ?? this.isAvailable,
-    );
-  }
-
-  @override
-  List<Object?> get props => [id, name, imagePath, isAvailable];
+  List<Object?> get props => [isLoading, sports, errorMessage];
 }
