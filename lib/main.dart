@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_colors.dart';
-import 'presentation/home/views/home_view.dart';
+import 'core/navigation/app_router.dart';
 
 void main() {
   runApp(const ReservaPistaApp());
@@ -11,9 +11,10 @@ class ReservaPistaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Reserva Pista',
       debugShowCheckedModeBanner: false,
+      routerConfig: AppRouter.router,
       theme: ThemeData(
         primaryColor: AppColors.primary,
         scaffoldBackgroundColor: AppColors.background,
@@ -30,7 +31,6 @@ class ReservaPistaApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeView(),
     );
   }
 }

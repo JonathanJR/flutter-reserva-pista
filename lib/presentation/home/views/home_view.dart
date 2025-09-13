@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/navigation/app_routes.dart';
 import '../../common/widgets/sport_card.dart';
 import '../state/home_state.dart';
 
@@ -28,7 +30,7 @@ class HomeView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: Navegar a perfil
+              context.push(AppRoutes.profile.path);
             },
             icon: const Icon(
               Icons.person,
