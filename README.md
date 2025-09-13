@@ -230,7 +230,6 @@ core/
 
 ### 📱 State Management
 - **Riverpod**: Gestión del estado reactivo y dependency injection
-- **Freezed**: Inmutabilidad y generación de código
 - **Reactive State**: Estados tipados para UI (Loading, Success, Error)
 
 ### 🧭 Navegación
