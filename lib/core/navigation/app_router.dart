@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../presentation/auth/views/login_view.dart';
 import '../../presentation/home/views/home_view.dart';
 import '../../presentation/profile/views/profile_view.dart';
 import 'app_routes.dart';
@@ -9,6 +10,16 @@ class AppRouter {
   static GoRouter get router => GoRouter(
     initialLocation: AppRoutes.initial.path,
     routes: [
+      // Ruta de Login
+      GoRoute(
+        path: AppRoutes.login.path,
+        name: AppRoutes.login.name,
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const LoginView(),
+        ),
+      ),
+      
       // Ruta de Home
       GoRoute(
         path: AppRoutes.home.path,

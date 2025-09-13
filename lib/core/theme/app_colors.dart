@@ -18,4 +18,8 @@ class AppColors {
   
   // Colores para las tarjetas de deporte
   static const Color cardShadow = Color(0x1A000000);
+  
+  // Colores adicionales
+  static const Color lightPurple = Color(0xFFE8D5FF);
+  static const Color lightGreen = Color(0xFFE8F5E8);
 }
