@@ -28,14 +28,15 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   @override
   Widget build(BuildContext context) {
     final availableDatesUseCase = ref.read(getAvailableDatesUseCaseProvider);
-    final timeSlotsUseCase = ref.read(getTimeSlotsUseCaseProvider);
     final remoteConfigRepository = ref.read(remoteConfigRepositoryProvider);
     final availableDates = availableDatesUseCase.execute();
     final debugInfo = remoteConfigRepository.getDebugInfo();
 
-    // Generar slots de tiempo si hay una fecha seleccionada
-    final dayTimeSlots = selectedDate != null
-        ? timeSlotsUseCase.execute(selectedDate!)
+    // Generar slots de tiempo con disponibilidad real si hay una fecha seleccionada
+    final dayTimeSlotsAsync = selectedDate != null
+        ? ref.watch(dayTimeSlotsWithAvailabilityProvider(
+            DayTimeSlotsQuery(date: selectedDate!, courtId: widget.courtId),
+          ))
         : null;
 
     return Scaffold(
@@ -342,7 +343,54 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                 ],
 
                 // Mostrar horarios disponibles si hay una fecha seleccionada
-                if (selectedDate != null && dayTimeSlots != null) ...[
+                if (selectedDate != null) ...[
+                  // Mostrar loading o contenido según el estado del cache
+                  if (dayTimeSlotsAsync == null) ...[
+                    const SizedBox(height: 32),
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ] else if (dayTimeSlotsAsync.morningSlots.isEmpty && 
+                             dayTimeSlotsAsync.afternoonSlots.isEmpty) ...[
+                    const SizedBox(height: 32),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.schedule,
+                            size: 48,
+                            color: Colors.orange.shade400,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No hay horarios disponibles',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Todos los slots están ocupados para esta fecha.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.orange.shade600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ] else ...[
                   const SizedBox(height: 32),
 
                   // Sección de horarios disponibles
@@ -387,7 +435,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   const SizedBox(height: 20),
 
                   // Horarios de mañana
-                  if (dayTimeSlots.morningSlots.isNotEmpty) ...[
+                  if (dayTimeSlotsAsync.morningSlots.isNotEmpty) ...[
                     Text(
                       'Mañana',
                       style: TextStyle(
@@ -399,7 +447,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
                     const SizedBox(height: 12),
 
-                    ...dayTimeSlots.morningSlots.map(
+                    ...dayTimeSlotsAsync.morningSlots.map(
                       (slot) => GestureDetector(
                         onTap: slot.isAvailable
                             ? () {
@@ -492,7 +540,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   ],
 
                   // Horarios de tarde
-                  if (dayTimeSlots.afternoonSlots.isNotEmpty) ...[
+                  if (dayTimeSlotsAsync.afternoonSlots.isNotEmpty) ...[
                     Text(
                       'Tarde',
                       style: TextStyle(
@@ -504,7 +552,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
                     const SizedBox(height: 12),
 
-                    ...dayTimeSlots.afternoonSlots.map(
+                    ...dayTimeSlotsAsync.afternoonSlots.map(
                       (slot) => GestureDetector(
                         onTap: slot.isAvailable
                             ? () {
@@ -593,11 +641,12 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                       ),
                     ),
                   ],
-                ],
-
-                const SizedBox(height: 32),
+                ], // Cierre del else
               ],
-            ),
+
+              const SizedBox(height: 32),
+            ],
+          ),
           ),
 
           // Vista anclada en la parte inferior cuando hay un slot seleccionado

@@ -27,23 +27,22 @@ class ProfileView extends ConsumerWidget {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            // Verificar si se puede hacer pop, sino navegar al home
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/');
+            }
           },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.onPrimary,
-          ),
+          icon: const Icon(Icons.arrow_back, color: AppColors.onPrimary),
         ),
       ),
       body: authState.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          child: CircularProgressIndicator(color: AppColors.primary),
         ),
-        error: (error, stack) => const Center(
-          child: Text('Error al cargar el perfil'),
-        ),
+        error: (error, stack) =>
+            const Center(child: Text('Error al cargar el perfil')),
         data: (user) => SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -52,7 +51,7 @@ class ProfileView extends ConsumerWidget {
               children: [
                 // Espaciador superior
                 const Spacer(),
-                
+
                 if (user == null) ...[
                   // Usuario no autenticado - Mostrar tarjeta de login
                   Container(
@@ -80,9 +79,9 @@ class ProfileView extends ConsumerWidget {
                             size: 48,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Título principal
                         const Text(
                           'Inicia sesión',
@@ -92,9 +91,9 @@ class ProfileView extends ConsumerWidget {
                             color: Color(0xFF2D1B69), // Color morado oscuro
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Descripción
                         const Text(
                           'Accede a tu cuenta para gestionar tus reservas y ver tu historial de actividades',
@@ -105,9 +104,9 @@ class ProfileView extends ConsumerWidget {
                             height: 1.4,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 32),
-                        
+
                         // Botón de Iniciar Sesión
                         SizedBox(
                           width: double.infinity,
@@ -171,12 +170,14 @@ class ProfileView extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 24),
-                            
+
                             // Nombre del usuario
                             Text(
-                              user.fullName.isNotEmpty ? user.fullName : user.displayName ?? 'Usuario',
+                              user.fullName.isNotEmpty
+                                  ? user.fullName
+                                  : user.displayName ?? 'Usuario',
                               style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -184,9 +185,9 @@ class ProfileView extends ConsumerWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            
+
                             const SizedBox(height: 8),
-                            
+
                             // Email del usuario
                             Text(
                               user.email,
@@ -196,9 +197,9 @@ class ProfileView extends ConsumerWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            
+
                             const SizedBox(height: 32),
-                            
+
                             // Botón Editar perfil
                             SizedBox(
                               width: 200,
@@ -222,7 +223,10 @@ class ProfileView extends ConsumerWidget {
                                   ),
                                 ),
                                 style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Color(0xFF2D1B69), width: 2),
+                                  side: const BorderSide(
+                                    color: Color(0xFF2D1B69),
+                                    width: 2,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24),
                                   ),
@@ -232,9 +236,9 @@ class ProfileView extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Título Estadísticas
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -247,9 +251,9 @@ class ProfileView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Tarjetas de estadísticas
                       Row(
                         children: [
@@ -298,57 +302,72 @@ class ProfileView extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          
-                          // Reservas activas
+
+                          // Reservas activas (desde cache)
                           Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(left: 8, right: 16),
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final activeReservationsCount = ref.watch(
+                                  userReservationsCountProvider(user.id),
+                                );
+
+                                return Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 16,
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.check,
-                                    color: Colors.green.shade600,
-                                    size: 32,
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.1),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    '0',
-                                    style: TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green.shade600,
-                                    ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.event_available,
+                                        color: activeReservationsCount > 0
+                                            ? Colors.green.shade600
+                                            : Colors.grey.shade400,
+                                        size: 32,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        '$activeReservationsCount',
+                                        style: TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: activeReservationsCount > 0
+                                              ? Colors.green.shade600
+                                              : Colors.grey.shade400,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Activas',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Activas',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade600,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Miembro desde
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -384,7 +403,9 @@ class ProfileView extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  _formatRegistrationDate(user.registrationDate),
+                                  _formatRegistrationDate(
+                                    user.registrationDate,
+                                  ),
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -396,22 +417,21 @@ class ProfileView extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Botón de Cerrar Sesión
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         height: 56,
                         child: ElevatedButton.icon(
                           onPressed: () async {
-                            final authRepository = ref.read(authRepositoryProvider);
+                            final authRepository = ref.read(
+                              authRepositoryProvider,
+                            );
                             await authRepository.signOut();
                           },
-                          icon: const Icon(
-                            Icons.logout,
-                            color: Colors.red,
-                          ),
+                          icon: const Icon(Icons.logout, color: Colors.red),
                           label: const Text(
                             'Cerrar sesión',
                             style: TextStyle(
@@ -433,7 +453,7 @@ class ProfileView extends ConsumerWidget {
                     ],
                   ),
                 ],
-                
+
                 // Espaciador inferior
                 const Spacer(),
               ],
@@ -447,26 +467,38 @@ class ProfileView extends ConsumerWidget {
   /// Obtener iniciales del nombre completo
   String _getInitials(String fullName) {
     if (fullName.isEmpty) return 'U';
-    
+
     final names = fullName.trim().split(' ');
     if (names.length == 1) {
       return names[0].substring(0, 1).toUpperCase();
     } else {
-      return '${names[0].substring(0, 1)}${names[1].substring(0, 1)}'.toUpperCase();
+      return '${names[0].substring(0, 1)}${names[1].substring(0, 1)}'
+          .toUpperCase();
     }
   }
 
   /// Formatear fecha de registro
   String _formatRegistrationDate(DateTime date) {
     final months = [
-      '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      '',
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
     ];
-    
+
     final day = date.day;
     final month = months[date.month];
     final year = date.year;
-    
+
     return '$day de $month del $year';
   }
 }
