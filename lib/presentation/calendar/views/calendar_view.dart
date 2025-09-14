@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/navigation/app_routes.dart';
 import '../../../core/providers/firebase_providers.dart';
 
 /// Vista de selección de fecha para reservas
@@ -42,7 +43,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       resizeToAvoidBottomInset: false,
       // Para que la vista anclada no se mueva con el teclado
       appBar: AppBar(
-        title: Text('Calendario - ${widget.courtName}'),
+        title: Text('Calendario - ${_cleanCourtName(widget.courtName)}'),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.onPrimary,
         leading: IconButton(
@@ -635,6 +636,15 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                       ),
                       const SizedBox(height: 8),
                       Text(
+                        '${_cleanCourtName(widget.courtName)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
                         '${_getFullDateString(selectedDate!)} • ${_formatSelectedTimeSlot(selectedTimeSlot!)}',
                         style: const TextStyle(
                           fontSize: 18,
@@ -648,10 +658,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                         height: 56,
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: Implementar lógica de continuar con la reserva
-                            debugPrint(
-                              'Continuar con reserva: ${widget.courtName} - ${_getFullDateString(selectedDate!)} - ${_formatSelectedTimeSlot(selectedTimeSlot!)}',
-                            );
+                            _navigateToConfirmReservation(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
@@ -755,5 +762,39 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
         '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}';
 
     return '$start-$end';
+  }
+
+  /// Navegar a la vista de confirmación de reserva
+  void _navigateToConfirmReservation(BuildContext context) {
+    if (selectedDate != null && selectedTimeSlot != null) {
+      // Limpiar y preparar parámetros para la navegación
+      final cleanCourtName = _cleanCourtName(widget.courtName);
+      final safeCourtName = cleanCourtName
+          .replaceAll(' ', '_')
+          .replaceAll('-', '_');
+
+      // Formatear fecha completa
+      final fullDateString = _getFullDateString(selectedDate!);
+
+      // Formatear horario seleccionado
+      final timeSlotString = _formatSelectedTimeSlot(selectedTimeSlot!);
+
+      // Codificar parámetros para URL
+      final encodedDate = Uri.encodeComponent(fullDateString);
+      final encodedTime = Uri.encodeComponent(timeSlotString);
+
+      // Navegar a confirmación de reserva
+      context.push(
+        '${AppRoutes.confirmReservation.path}/${widget.courtId}/$safeCourtName/$encodedDate/$encodedTime',
+      );
+    }
+  }
+
+  /// Limpiar espacios extra del nombre de la pista
+  String _cleanCourtName(String name) {
+    return name
+        .split(' ') // Dividir por espacios
+        .where((word) => word.isNotEmpty) // Filtrar strings vacíos
+        .join(' '); // Unir con un solo espacio
   }
 }

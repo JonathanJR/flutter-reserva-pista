@@ -6,6 +6,7 @@ import '../../presentation/calendar/views/calendar_view.dart';
 import '../../presentation/courts/views/court_list_view.dart';
 import '../../presentation/home/views/home_view.dart';
 import '../../presentation/profile/views/profile_view.dart';
+import '../../presentation/reservation/views/confirm_reservation_view.dart';
 import 'app_routes.dart';
 
 /// Configuración del router de la aplicación
@@ -17,40 +18,32 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.login.path,
         name: AppRoutes.login.name,
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const LoginView(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const LoginView()),
       ),
-      
+
       // Ruta de Registro
       GoRoute(
         path: AppRoutes.register.path,
         name: AppRoutes.register.name,
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const RegisterView(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const RegisterView()),
       ),
-      
+
       // Ruta de Home
       GoRoute(
         path: AppRoutes.home.path,
         name: AppRoutes.home.name,
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const HomeView(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const HomeView()),
       ),
-      
+
       // Ruta de Perfil
       GoRoute(
         path: AppRoutes.profile.path,
         name: AppRoutes.profile.name,
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const ProfileView(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const ProfileView()),
       ),
 
       // Ruta de Lista de Pistas
@@ -73,43 +66,63 @@ class AppRouter {
         pageBuilder: (context, state) {
           final courtId = state.pathParameters['courtId']!;
           final safeCourtName = state.pathParameters['courtName']!;
-          
+
           // Convertir de safe format a nombre legible
-          final courtName = safeCourtName
-              .replaceAll('_', ' '); // guiones bajos → espacios
-          
+          final courtName = safeCourtName.replaceAll(
+            '_',
+            ' ',
+          ); // guiones bajos → espacios
+
           return MaterialPage(
             key: state.pageKey,
-            child: CalendarView(
+            child: CalendarView(courtId: courtId, courtName: courtName),
+          );
+        },
+      ),
+
+      // Ruta de Confirmación de Reserva
+      GoRoute(
+        path:
+            '${AppRoutes.confirmReservation.path}/:courtId/:courtName/:selectedDate/:selectedTime',
+        name: AppRoutes.confirmReservation.name,
+        pageBuilder: (context, state) {
+          final courtId = state.pathParameters['courtId']!;
+          final safeCourtName = state.pathParameters['courtName']!;
+          final selectedDate = state.pathParameters['selectedDate']!;
+          final selectedTime = state.pathParameters['selectedTime']!;
+
+          // Convertir de safe format a nombre legible
+          final courtName = safeCourtName.replaceAll('_', ' ');
+
+          // Decodificar fecha y hora (están codificadas para URL)
+          final decodedDate = Uri.decodeComponent(selectedDate);
+          final decodedTime = Uri.decodeComponent(selectedTime);
+
+          return MaterialPage(
+            key: state.pageKey,
+            child: ConfirmReservationView(
               courtId: courtId,
               courtName: courtName,
+              selectedDate: decodedDate,
+              selectedTime: decodedTime,
             ),
           );
         },
       ),
-      
+
       // TODO: Agregar más rutas según sea necesario
-      // - Court Selection
-      // - Calendar
-      // - Reservations
     ],
-    
+
     // Manejo de errores de navegación
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Error'),
-        ),
+        appBar: AppBar(title: const Text('Error')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text(
                 'Página no encontrada',
