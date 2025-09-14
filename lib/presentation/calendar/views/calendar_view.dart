@@ -26,9 +26,13 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   @override
   Widget build(BuildContext context) {
     final availableDatesUseCase = ref.read(getAvailableDatesUseCaseProvider);
+    final timeSlotsUseCase = ref.read(getTimeSlotsUseCaseProvider);
     final remoteConfigRepository = ref.read(remoteConfigRepositoryProvider);
     final availableDates = availableDatesUseCase.execute();
     final debugInfo = remoteConfigRepository.getDebugInfo();
+    
+    // Generar slots de tiempo si hay una fecha seleccionada
+    final dayTimeSlots = selectedDate != null ? timeSlotsUseCase.execute(selectedDate!) : null;
     
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -209,92 +213,48 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
               
               const SizedBox(height: 32),
               
-              // Card de seleccionar fecha
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: AppColors.lightPurple,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    // Ícono de calendario
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade600,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.calendar_today,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // Título de la card
-                    Text(
-                      selectedDate != null 
-                          ? '${selectedDate!.day}'
-                          : 'Selecciona una fecha',
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D1B69),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 8),
-                    
-                    // Subtítulo de la card
-                    Text(
-                      selectedDate != null
-                          ? 'Fecha seleccionada: ${_getFullDateString(selectedDate!)}'
-                          : 'Elige una fecha disponible para ver los horarios',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF666666),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    
-                    if (selectedDate != null) ...[
-                      const SizedBox(height: 24),
-                      
-                      // Botón para continuar (placeholder)
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Navegar a selección de horarios
-                            debugPrint('Continuar con fecha: ${selectedDate}');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
+              // Card informativa si no hay fecha seleccionada
+              if (selectedDate == null) ...[
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.grey.shade600,
+                            size: 24,
                           ),
-                          child: const Text(
-                            'Ver Horarios Disponibles',
+                          const SizedBox(width: 12),
+                          Text(
+                            'Información',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade700,
                             ),
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Por favor, selecciona una fecha de las opciones disponibles para ver los horarios de reserva.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
                         ),
                       ),
                     ],
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ] else ...[
               // Mensaje si no hay fechas disponibles
               Container(
@@ -332,6 +292,160 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   ],
                 ),
               ),
+            ],
+            
+            // Mostrar horarios disponibles si hay una fecha seleccionada
+            if (selectedDate != null && dayTimeSlots != null) ...[
+              const SizedBox(height: 32),
+              
+              // Sección de horarios disponibles
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.access_time,
+                      color: Colors.blue.shade700,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Horarios disponibles',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.onBackground,
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Fecha seleccionada
+              Text(
+                'Fecha seleccionada: ${_getFullDateString(selectedDate!)}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Horarios de mañana
+              if (dayTimeSlots.morningSlots.isNotEmpty) ...[
+                Text(
+                  'Mañana',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                ...dayTimeSlots.morningSlots.map((slot) => Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        slot.displayTime,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.onBackground,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: slot.isAvailable ? Colors.green.shade100 : Colors.red.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          slot.isAvailable ? 'Disponible' : 'Ocupado',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: slot.isAvailable ? Colors.green.shade700 : Colors.red.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+                
+                const SizedBox(height: 20),
+              ],
+              
+              // Horarios de tarde
+              if (dayTimeSlots.afternoonSlots.isNotEmpty) ...[
+                Text(
+                  'Tarde',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                ...dayTimeSlots.afternoonSlots.map((slot) => Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        slot.displayTime,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.onBackground,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: slot.isAvailable ? Colors.green.shade100 : Colors.red.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          slot.isAvailable ? 'Disponible' : 'Ocupado',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: slot.isAvailable ? Colors.green.shade700 : Colors.red.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+              ],
             ],
             
             const SizedBox(height: 32),

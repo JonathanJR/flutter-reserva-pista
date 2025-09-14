@@ -5,6 +5,15 @@ abstract interface class RemoteConfigRepository {
 
   /// Obtener número máximo de días de anticipación para reservas
   int getMaxDaysAdvance();
+  
+  /// Obtener configuración de horarios matutinos
+  Map<String, int> getMorningConfig();
+  
+  /// Obtener configuración de horarios vespertinos
+  Map<String, int> getAfternoonConfig();
+  
+  /// Obtener duración de reserva en minutos
+  int getReservationDurationMinutes();
 
   /// Obtener valor booleano
   bool getBool(String key);

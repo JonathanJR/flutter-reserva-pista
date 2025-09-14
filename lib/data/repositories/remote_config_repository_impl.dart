@@ -16,6 +16,21 @@ class RemoteConfigRepositoryImpl implements RemoteConfigRepository {
   int getMaxDaysAdvance() {
     return _dataSource.getMaxDaysAdvance();
   }
+  
+  @override
+  Map<String, int> getMorningConfig() {
+    return _dataSource.getMorningConfig();
+  }
+  
+  @override
+  Map<String, int> getAfternoonConfig() {
+    return _dataSource.getAfternoonConfig();
+  }
+  
+  @override
+  int getReservationDurationMinutes() {
+    return _dataSource.getReservationDurationMinutes();
+  }
 
   @override
   bool getBool(String key) {

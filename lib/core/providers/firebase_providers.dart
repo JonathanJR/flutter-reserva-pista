@@ -14,6 +14,7 @@ import '../../domain/repositories/remote_config_repository.dart';
 import '../../domain/usecases/get_sport_types_stream_usecase.dart';
 import '../../domain/usecases/get_courts_by_sport_type_usecase.dart';
 import '../../domain/usecases/get_available_dates_usecase.dart';
+import '../../domain/usecases/get_time_slots_usecase.dart';
 import '../../domain/usecases/auth/sign_in_with_email_password_usecase.dart';
 import '../../domain/usecases/auth/sign_up_with_email_password_usecase.dart';
 
@@ -85,6 +86,12 @@ final getCourtsBySportTypeUseCaseProvider = Provider<GetCourtsBySportTypeUseCase
 final getAvailableDatesUseCaseProvider = Provider<GetAvailableDatesUseCase>((ref) {
   final remoteConfigRepository = ref.read(remoteConfigRepositoryProvider);
   return GetAvailableDatesUseCase(remoteConfigRepository);
+});
+
+/// Provider para GetTimeSlotsUseCase
+final getTimeSlotsUseCaseProvider = Provider<GetTimeSlotsUseCase>((ref) {
+  final remoteConfigRepository = ref.read(remoteConfigRepositoryProvider);
+  return GetTimeSlotsUseCase(remoteConfigRepository);
 });
 
 /// Provider para SignInWithEmailPasswordUseCase
