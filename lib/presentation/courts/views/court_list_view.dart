@@ -270,8 +270,11 @@ class CourtListView extends ConsumerWidget {
                           height: 48,
                           child: OutlinedButton(
                             onPressed: () {
-                              // TODO: Implementar navegación a disponibilidad
-                              debugPrint('Ver disponibilidad de pista');
+                              // Pasar solo el courtName sin encoding especial - GoRouter lo maneja automáticamente
+                              final safeCourtName = court.displayName
+                                  .replaceAll(' ', '_')  // Espacios → guiones bajos
+                                  .replaceAll('-', '_'); // Guiones → guiones bajos
+                              context.push('${AppRoutes.calendar.path}/${court.id}/$safeCourtName');
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: AppColors.primary, width: 2),

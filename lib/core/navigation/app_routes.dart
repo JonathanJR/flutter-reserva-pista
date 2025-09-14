@@ -4,7 +4,8 @@ enum AppRoutes {
   profile,
   login,
   register,
-  courtList;
+  courtList,
+  calendar;
 
   String get path => '/$name';
   String get name => toString().split('.').last;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/auth/views/login_view.dart';
 import '../../presentation/auth/views/register_view.dart';
+import '../../presentation/calendar/views/calendar_view.dart';
 import '../../presentation/courts/views/court_list_view.dart';
 import '../../presentation/home/views/home_view.dart';
 import '../../presentation/profile/views/profile_view.dart';
@@ -61,6 +62,28 @@ class AppRouter {
           return MaterialPage(
             key: state.pageKey,
             child: CourtListView(sportTypeId: sportTypeId),
+          );
+        },
+      ),
+
+      // Ruta de Calendario
+      GoRoute(
+        path: '${AppRoutes.calendar.path}/:courtId/:courtName',
+        name: AppRoutes.calendar.name,
+        pageBuilder: (context, state) {
+          final courtId = state.pathParameters['courtId']!;
+          final safeCourtName = state.pathParameters['courtName']!;
+          
+          // Convertir de safe format a nombre legible
+          final courtName = safeCourtName
+              .replaceAll('_', ' '); // guiones bajos → espacios
+          
+          return MaterialPage(
+            key: state.pageKey,
+            child: CalendarView(
+              courtId: courtId,
+              courtName: courtName,
+            ),
           );
         },
       ),
