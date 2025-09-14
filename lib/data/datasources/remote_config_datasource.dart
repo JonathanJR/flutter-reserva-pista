@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 /// Datasource para Firebase Remote Config
 class RemoteConfigDataSource {
@@ -18,14 +19,10 @@ class RemoteConfigDataSource {
     // Establecer valores por defecto
     await _remoteConfig.setDefaults({
       'max_days_advance': 7,
-      'morning_start_hour': 10,
-      'morning_start_minute': 0,
-      'morning_end_hour': 14,
-      'morning_end_minute': 30,
-      'afternoon_start_hour': 16,
-      'afternoon_start_minute': 0,
-      'afternoon_end_hour': 21,
-      'afternoon_end_minute': 30,
+      'morning_start_hour': '10:00',
+      'morning_end_hour': '14:30', 
+      'afternoon_start_hour': '16:00',
+      'afternoon_end_hour': '21:30',
       'reservation_duration_minutes': 90,
     });
 
@@ -71,22 +68,61 @@ class RemoteConfigDataSource {
 
   /// Obtener configuración de horarios matutinos
   Map<String, int> getMorningConfig() {
+    final startTime = _parseTimeString(_remoteConfig.getString('morning_start_hour'));
+    final endTime = _parseTimeString(_remoteConfig.getString('morning_end_hour'));
+    
     return {
-      'start_hour': _remoteConfig.getInt('morning_start_hour'),
-      'start_minute': _remoteConfig.getInt('morning_start_minute'),
-      'end_hour': _remoteConfig.getInt('morning_end_hour'),
-      'end_minute': _remoteConfig.getInt('morning_end_minute'),
+      'start_hour': startTime['hour']!,
+      'start_minute': startTime['minute']!,
+      'end_hour': endTime['hour']!,
+      'end_minute': endTime['minute']!,
     };
   }
 
   /// Obtener configuración de horarios vespertinos
   Map<String, int> getAfternoonConfig() {
+    final startTime = _parseTimeString(_remoteConfig.getString('afternoon_start_hour'));
+    final endTime = _parseTimeString(_remoteConfig.getString('afternoon_end_hour'));
+    
     return {
-      'start_hour': _remoteConfig.getInt('afternoon_start_hour'),
-      'start_minute': _remoteConfig.getInt('afternoon_start_minute'),
-      'end_hour': _remoteConfig.getInt('afternoon_end_hour'),
-      'end_minute': _remoteConfig.getInt('afternoon_end_minute'),
+      'start_hour': startTime['hour']!,
+      'start_minute': startTime['minute']!,
+      'end_hour': endTime['hour']!,
+      'end_minute': endTime['minute']!,
     };
+  }
+
+  /// Parsear string de tiempo formato "HH:mm" a Map con hour y minute
+  Map<String, int> _parseTimeString(String timeString) {
+    try {
+      final parts = timeString.split(':');
+      if (parts.length != 2) {
+        throw FormatException('Formato de tiempo inválido: $timeString');
+      }
+      
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      
+      // Validar rango de horas y minutos
+      if (hour < 0 || hour > 23) {
+        throw FormatException('Hora inválida: $hour');
+      }
+      if (minute < 0 || minute > 59) {
+        throw FormatException('Minuto inválido: $minute');
+      }
+      
+      return {
+        'hour': hour,
+        'minute': minute,
+      };
+    } catch (e) {
+      // Si hay error en el parsing, usar valores por defecto seguros
+      debugPrint('Error parseando tiempo "$timeString": $e. Usando 10:00 como fallback.');
+      return {
+        'hour': 10,
+        'minute': 0,
+      };
+    }
   }
 
   /// Obtener duración de reserva en minutos
@@ -102,8 +138,10 @@ class RemoteConfigDataSource {
       'max_days_advance': _remoteConfig.getInt('max_days_advance'),
       'source_max_days_advance': _remoteConfig.getValue('max_days_advance').source.toString(),
       'reservation_duration_minutes': _remoteConfig.getInt('reservation_duration_minutes'),
-      'morning_start': '${_remoteConfig.getInt('morning_start_hour')}:${_remoteConfig.getInt('morning_start_minute').toString().padLeft(2, '0')}',
-      'afternoon_start': '${_remoteConfig.getInt('afternoon_start_hour')}:${_remoteConfig.getInt('afternoon_start_minute').toString().padLeft(2, '0')}',
+      'morning_start': _remoteConfig.getString('morning_start_hour'),
+      'morning_end': _remoteConfig.getString('morning_end_hour'),
+      'afternoon_start': _remoteConfig.getString('afternoon_start_hour'),
+      'afternoon_end': _remoteConfig.getString('afternoon_end_hour'),
     };
   }
 }
